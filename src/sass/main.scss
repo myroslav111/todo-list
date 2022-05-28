@@ -5,4 +5,7 @@
 
 // Стили для файла с примером HTML-фрагмента
 
-@import './example.scss'
+@import './base';
+@import './input.scss';
+@import './checkbox';
+@import './btn-close';
