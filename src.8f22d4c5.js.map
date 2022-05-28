@@ -1,1 +1,0 @@
-{"version":3,"sources":["index.js"],"names":["console","log"],"mappings":";;;AAGA,aAHA,QAAA,oBAEAA,QAAQC,IAAI,eACZD,QAAQC,IAAI","file":"src.8f22d4c5.js","sourceRoot":"../src","sourcesContent":["import './sass/main.scss';\n\nconsole.log('Hello World');\nconsole.log('hello');\n"]}
