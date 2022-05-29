@@ -1,44 +1,104 @@
 import './sass/main.scss';
 import { refs } from './js/refs';
+import { fatchData, postData, deleteData, patchData } from './js/api';
 
 refs.form.addEventListener('submit', preventDefault);
 refs.btn.addEventListener('click', renderToDoList);
 
+const objData = {};
+
 function preventDefault(e) {
   e.preventDefault();
 }
+// console.log(refs.btn);
+refs.button.addEventListener('click', renderToDoListStart);
+refs.btn.disabled = true;
 
-// берем дату инпута
-function renderToDoList(e) {
-  const userInput = refs.form.input.value;
-  if (!userInput) return;
-  renderToDom(makeMarkup(userInput));
-  refs.form.reset();
-  refs.list.addEventListener('click', removeItemFromDom);
+function renderToDoListStart(e) {
+  refs.btn.disabled = false;
+  refs.button.classList.add('hidden');
+  refs.title.innerHTML = '<h1 class"title">ВВЕДИ ЗАДАЧУ</h1>';
 }
 
-function removeItemFromDom(e) {
+// берем дату инпута и рендерим лист
+async function renderToDoList(e) {
+  const userInput = refs.form.input.value;
+  if (!userInput) return;
+  refs.title.innerHTML = '<h1 class"title">подождем</h1>';
+
+  setTimeout(async () => {
+    try {
+      await renderDataServer(userInput);
+      refs.form.reset();
+      refs.list.addEventListener('change', isCheck);
+      refs.list.addEventListener('click', removeItemFromDom);
+    } catch (error) {
+    } finally {
+      refs.title.innerHTML = '';
+    }
+  }, 1500);
+  // await renderDataServer(userInput);
+  // refs.form.reset();
+  // refs.list.addEventListener('change', isCheck);
+  // refs.list.addEventListener('click', removeItemFromDom);
+}
+
+async function isCheck(e) {
+  const elById = e.target.parentElement.id;
+  await patchData(elById, { isDone: e.target.checked });
+}
+
+// рендер данных с сервиса
+async function renderDataServer(userInput) {
+  await postData(createObjDataToPost(userInput));
+  refs.list.addEventListener('change', isCheck);
+  const res = await fatchData();
+  const arrMarkup = res.data.map(el => {
+    return makeMarkup(el.text, el.id, el.isDone);
+  });
+
+  renderToDom(arrMarkup.join(''));
+}
+
+// удаляем айтемы
+async function removeItemFromDom(e) {
   if (e.target.nodeName !== 'DIV') return;
-  e.target.parentElement.remove();
+  const elForDelete = e.target.parentElement;
+  elForDelete.remove();
+  await deleteData(elForDelete.id);
 }
 
 // рендер в дом
 function renderToDom(markup) {
+  refs.list.innerHTML = '';
   refs.list.insertAdjacentHTML('beforeend', markup);
 }
 
-// делаем строку для рендера
-function makeMarkup(data) {
-  return `<li class="boxToDo">
-    <input type="checkbox" id="todo" name="todo" value="todo" />
-    <label for="todo" data-content="${data}">${data}</label>
-    <div class="close"></div>
-  </li> `;
+// обьект для для post
+function createObjDataToPost(input) {
+  objData.isDone = false;
+  objData.text = input;
+  return objData;
 }
 
-fetch('https://62927bdf9d159855f08b4a6f.mockapi.io/todo')
-  .then(res => {
-    console.log(res);
-    return res.json();
-  })
-  .catch(err => console.log(err));
+// делаем строку для рендера
+function makeMarkup(data, id, isDone) {
+  switch (isDone) {
+    case true:
+      return `<li class="boxToDo" id="${id}">
+    <input type="checkbox" id="todo" name="todo" value="todo" checked/>
+    <label for="todo" data-content="${data}">${data}</label>
+    <div class="close"></div>
+    </li> `;
+      break;
+    case false:
+      return `<li class="boxToDo" id="${id}">
+      <input type="checkbox" id="todo" name="todo" value="todo" />
+      <label for="todo" data-content="${data}">${data}</label>
+      <div class="close"></div>
+      </li> `;
+      break;
+    default:
+      console.log('чет пошло не так');
+  }
+}
