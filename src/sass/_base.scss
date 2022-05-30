@@ -4,6 +4,25 @@ li {
 ul {
   padding: 0;
 }
+@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@600&display=swap');
+
+.start-text {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-family: 'Caveat', cursive;
+  font-size: 1.5em;
+  padding: 1.5em;
+}
+
+.second-text {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-family: 'Caveat', cursive;
+  font-size: 1.5em;
+  padding: 1.5em;
+}
 
 .containerTitle {
   display: flex;

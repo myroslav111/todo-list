@@ -12,19 +12,29 @@ function preventDefault(e) {
 }
 // console.log(refs.btn);
 refs.button.addEventListener('click', renderToDoListStart);
-refs.btn.disabled = true;
+// refs.btn.disabled = true;
+refs.form.classList.add('hidden');
 
 function renderToDoListStart(e) {
-  refs.btn.disabled = false;
+  refs.startTxt.classList.add('hidden');
+  // refs.btn.disabled = false;
   refs.button.classList.add('hidden');
+  refs.form.classList.remove('hidden');
   refs.title.innerHTML = '<h1 class"title">ВВЕДИ ЗАДАЧУ</h1>';
 }
 
+let counter = 0;
 // берем дату инпута и рендерим лист
 async function renderToDoList(e) {
+  counter += 1;
   const userInput = refs.form.input.value;
   if (!userInput) return;
-  refs.title.innerHTML = '<h1 class"title">подождем</h1>';
+  if (counter === 1) {
+    refs.title.innerHTML = `<div class"second-text"><span>а пока ждем анекдот</span><br/><span>Совокупление — процесс покупки совы.</span></div>`;
+  }
+  if (counter > 1) {
+    refs.title.innerHTML = 'ЩА ЖДИ';
+  }
 
   setTimeout(async () => {
     try {
@@ -36,7 +46,7 @@ async function renderToDoList(e) {
     } finally {
       refs.title.innerHTML = '';
     }
-  }, 1500);
+  }, 2000);
   // await renderDataServer(userInput);
   // refs.form.reset();
   // refs.list.addEventListener('change', isCheck);

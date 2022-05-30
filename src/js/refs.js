@@ -5,6 +5,7 @@ const refs = {
   list: document.querySelector('.toDoList'),
   button: document.querySelector('.button'),
   title: document.querySelector('.containerTitle'),
+  startTxt: document.querySelector('.start-text'),
 };
 
 export { refs };
