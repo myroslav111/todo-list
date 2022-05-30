@@ -4,36 +4,38 @@ import { fatchData, postData, deleteData, patchData } from './js/api';
 
 refs.form.addEventListener('submit', preventDefault);
 refs.btn.addEventListener('click', renderToDoList);
+refs.button.addEventListener('click', renderToDoListStart);
 
 const objData = {};
+let counter = 0;
+
+refs.form.classList.add('hidden');
 
 function preventDefault(e) {
   e.preventDefault();
 }
-// console.log(refs.btn);
-refs.button.addEventListener('click', renderToDoListStart);
-// refs.btn.disabled = true;
-refs.form.classList.add('hidden');
 
 function renderToDoListStart(e) {
   refs.startTxt.classList.add('hidden');
-  // refs.btn.disabled = false;
   refs.button.classList.add('hidden');
   refs.form.classList.remove('hidden');
   refs.title.innerHTML = '<h1 class"title">ВВЕДИ ЗАДАЧУ</h1>';
 }
 
-let counter = 0;
 // берем дату инпута и рендерим лист
 async function renderToDoList(e) {
   counter += 1;
   const userInput = refs.form.input.value;
   if (!userInput) return;
-  if (counter === 1) {
-    refs.title.innerHTML = `<div class"second-text"><span>а пока ждем анекдот</span><br/><span>Совокупление — процесс покупки совы.</span></div>`;
-  }
-  if (counter > 1) {
-    refs.title.innerHTML = 'ЩА ЖДИ';
+  switch (counter > 1) {
+    case true:
+      refs.title.innerHTML = 'ЩА ЖДИ';
+      break;
+    case false:
+      refs.title.innerHTML = `<div class"second-text"><span>а пока ждем анекдот</span><br/><span>Совокупление — процесс покупки совы.</span></div>`;
+      break;
+    default:
+      refs.title.innerHTML = 'Упс';
   }
 
   setTimeout(async () => {
@@ -46,11 +48,7 @@ async function renderToDoList(e) {
     } finally {
       refs.title.innerHTML = '';
     }
-  }, 2000);
-  // await renderDataServer(userInput);
-  // refs.form.reset();
-  // refs.list.addEventListener('change', isCheck);
-  // refs.list.addEventListener('click', removeItemFromDom);
+  }, 1000);
 }
 
 async function isCheck(e) {
