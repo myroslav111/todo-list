@@ -6,6 +6,10 @@ const refs = {
   button: document.querySelector('.button'),
   title: document.querySelector('.containerTitle'),
   startTxt: document.querySelector('.start-text'),
+  authorizationPage: document.querySelector('.form-structor'),
+  formSignUp: document.querySelector('.signup'),
+  formLogIn: document.querySelector('.center'),
+  login: document.querySelector('.login'),
 };
 
 export { refs };

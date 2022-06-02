@@ -34,4 +34,12 @@ async function patchData(id, obj) {
   }
 }
 
-export { fatchData, postData, deleteData, patchData };
+async function putData(id, obj) {
+  try {
+    await axios.put(`${URL}/${id}`, obj);
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export { fatchData, postData, deleteData, patchData, putData };

@@ -51,7 +51,7 @@ body,
     background: $button-bg-color;
     color: $button-text-color;
     box-shadow: 0 0 0.625em 0.12em rgba(0, 0, 0, 0.1);
-    border-radius: 0.12em;
+    border-radius: 0.72em;
     padding: 0.625em 0.625em;
 
     &:hover {
@@ -80,5 +80,6 @@ body,
     border: 0;
     outline: 0;
     padding: 22px 18px;
+    border-radius: 10px;
   }
 }
