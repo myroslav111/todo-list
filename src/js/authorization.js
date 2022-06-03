@@ -17,6 +17,17 @@ async function createUser(e) {
     Notiflix.Notify.failure('заполни все поля');
     return;
   }
+
+  const response = await (await fatchData()).data;
+  findUser = response.find(
+    ({ email, password }) => email === formData.email && password === formData.password,
+  );
+  if (findUser) {
+    console.log('wwwwwwwwwwww');
+    Notiflix.Notify.failure('уже существует');
+    return;
+  }
+
   await postData(formData);
   Notiflix.Loading.pulse();
   try {
@@ -41,7 +52,10 @@ async function logInUser(e) {
   findUser = response.find(
     ({ email, password }) => email === userNameInput && password === passwordUser,
   );
-  if (!findUser) return;
+  if (!findUser) {
+    Notiflix.Notify.failure('пароль или имя не верно');
+    return;
+  }
   refs.authorizationPage.classList.add('hidden');
   refs.form.classList.remove('hidden');
 }
