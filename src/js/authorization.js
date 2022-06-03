@@ -13,6 +13,10 @@ async function createUser(e) {
   formData.userName = e.target.userName.value;
   formData.email = e.target.email.value;
   formData.password = e.target.password.value;
+  if (formData.userName === '' || formData.email === '' || formData.password === '') {
+    Notiflix.Notify.failure('заполни все поля');
+    return;
+  }
   await postData(formData);
   Notiflix.Loading.pulse();
   try {
@@ -29,6 +33,10 @@ let findUser;
 async function logInUser(e) {
   const userNameInput = e.target.userNameSecond.value;
   const passwordUser = e.target.passwordSecond.value;
+  if (userNameInput === '' || passwordUser === '') {
+    Notiflix.Notify.failure('заполни все поля');
+    return;
+  }
   const response = await (await fatchData()).data;
   findUser = response.find(
     ({ email, password }) => email === userNameInput && password === passwordUser,
