@@ -1,37 +1,7 @@
 import { fatchData, postData, deleteData, patchData, putData } from './api';
+import Notiflix from 'notiflix';
 import { refs } from './refs';
-import { createObjDataToPost, makeMarkup, renderToDom, isCheck, removeItemFromDom } from '../index';
-
-console.clear();
-
-const loginBtn = document.getElementById('login');
-const signupBtn = document.getElementById('signup');
-
-loginBtn.addEventListener('click', e => {
-  let parent = e.target.parentNode.parentNode;
-  Array.from(e.target.parentNode.parentNode.classList).find(element => {
-    if (element !== 'slide-up') {
-      parent.classList.add('slide-up');
-    } else {
-      signupBtn.parentNode.classList.add('slide-up');
-      parent.classList.remove('slide-up');
-    }
-  });
-});
-
-signupBtn.addEventListener('click', ec);
-
-function ec(e) {
-  let parent = e.target.parentNode;
-  Array.from(e.target.parentNode.classList).find(element => {
-    if (element !== 'slide-up') {
-      parent.classList.add('slide-up');
-    } else {
-      loginBtn.parentNode.parentNode.classList.add('slide-up');
-      parent.classList.remove('slide-up');
-    }
-  });
-}
+import { createObjDataToPost, makeMarkup, renderToDom } from '../index';
 
 refs.authorizationPage.addEventListener('submit', e => e.preventDefault());
 refs.formSignUp.addEventListener('submit', createUser);
@@ -44,18 +14,18 @@ async function createUser(e) {
   formData.email = e.target.email.value;
   formData.password = e.target.password.value;
   await postData(formData);
-  refs.login.classList.remove('slide-up');
-  //   refs.authorizationPage.classList.add('hidden');
-  //   refs.form.classList.remove('hidden');
-
-  //   const response = await (await fatchData()).data;
-  //   console.log(response);
-  //   findUser = response;
-  //   console.log(findUser);
-  //   renderToDoListNext();
+  Notiflix.Loading.pulse();
+  try {
+    refs.login.classList.remove('slide-up');
+  } catch (error) {
+    console.log(error);
+  } finally {
+    Notiflix.Loading.remove();
+  }
 }
 
 let findUser;
+
 async function logInUser(e) {
   const userNameInput = e.target.userNameSecond.value;
   const passwordUser = e.target.passwordSecond.value;
@@ -68,16 +38,14 @@ async function logInUser(e) {
   refs.form.classList.remove('hidden');
 }
 
-refs.btn.addEventListener('click', renderToDoListNext);
+refs.btn.addEventListener('click', renderToDoList);
 
-async function renderToDoListNext(e) {
+async function renderToDoList(e) {
   counter2 += 1;
   let userInput = refs.form.input.value;
   if (!userInput) return;
-  console.log(createObjDataToPost(userInput));
   findUser.userData.push(createObjDataToPost(userInput));
   refs.form.reset();
-  console.log(findUser.userData);
 
   await putData(findUser.id, findUser);
 
@@ -90,7 +58,6 @@ function renderToDomm(res) {
       return makeMarkup(el.text, el.idMessage, el.isDone);
     });
     renderToDom(arrMarkup.join(''));
-    // refs.form.reset();
   } catch (error) {
     console.log('error');
   } finally {
@@ -98,24 +65,20 @@ function renderToDomm(res) {
   }
 }
 
-refs.list.addEventListener('click', removeItemFromDomm);
+refs.list.addEventListener('click', removeItemFromDommAndDb);
 
-async function removeItemFromDomm(e) {
+async function removeItemFromDommAndDb(e) {
   if (e.target.nodeName !== 'DIV') return;
   const elForDelete = e.target.parentElement;
   elForDelete.remove();
-  console.log(e.target);
+
   const res = await (await fatchData()).data;
-  console.log(res[0].id);
-  console.log(findUser.id);
-  console.log(elForDelete.id);
 
   const findToDel = res.find(el => el.id === findUser.id);
-  console.log(findToDel.userData);
   const newDataToPost = findToDel.userData.filter(el => el.idMessage !== elForDelete.id);
-  console.log(newDataToPost);
+
   findUser.userData = [...newDataToPost];
-  console.log(findUser.userData);
+
   await putData(findUser.id, findUser);
 }
 
@@ -124,7 +87,7 @@ refs.list.addEventListener('change', isChecked);
 async function isChecked(e) {
   const elById = e.target.parentElement.id;
   findUser.userData.map(el =>
-    el.idMessage === elById ? (el.isDone = e.target.checked) : console.log('ggg'),
+    el.idMessage === elById ? (el.isDone = e.target.checked) : console.log('чет пошло не так'),
   );
   await putData(findUser.id, findUser);
 }
