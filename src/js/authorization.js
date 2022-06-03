@@ -1,4 +1,4 @@
-import { fatchData, postData, deleteData, patchData, putData } from './api';
+import { fatchData, postData, putData } from './api';
 import Notiflix from 'notiflix';
 import { refs } from './refs';
 import { createObjDataToPost, makeMarkup, renderToDom } from '../index';
@@ -7,7 +7,6 @@ refs.authorizationPage.addEventListener('submit', e => e.preventDefault());
 refs.formSignUp.addEventListener('submit', createUser);
 refs.formLogIn.addEventListener('submit', logInUser);
 const formData = {};
-let counter2 = 0;
 
 async function createUser(e) {
   formData.userName = e.target.userName.value;
@@ -23,7 +22,6 @@ async function createUser(e) {
     ({ email, password }) => email === formData.email && password === formData.password,
   );
   if (findUser) {
-    console.log('wwwwwwwwwwww');
     Notiflix.Notify.failure('уже существует');
     return;
   }
@@ -63,7 +61,6 @@ async function logInUser(e) {
 refs.btn.addEventListener('click', renderToDoList);
 
 async function renderToDoList(e) {
-  counter2 += 1;
   let userInput = refs.form.input.value;
   if (!userInput) return;
   findUser.userData.push(createObjDataToPost(userInput));
@@ -113,5 +110,3 @@ async function isChecked(e) {
   );
   await putData(findUser.id, findUser);
 }
-
-export { logInUser };
